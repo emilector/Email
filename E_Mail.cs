@@ -1,28 +1,24 @@
 ﻿using System;
 using System.Net.Mail;
 
-namespace EMail_versenden
+namespace Communication
 {
-    class Program
+    public static class Email
     {
-        static void Main(string[] args)
+        public static void deliverPackage(string p_sender, string p_password, string p_recipient)
         {
-            string ABSENDER = "";
-            string PASSWORT = "";
-            string EMPFÄNGER = "";
-
             MailMessage mail = new MailMessage();
-            mail.From = new MailAddress(ABSENDER);
-            mail.To.Add(EMPFÄNGER);
+            SmtpClient client = new SmtpClient("smtp.live.com", 25);   
+
+            mail.From = new MailAddress(p_sender);
+            mail.To.Add(p_recipient);
             mail.Subject = "BETREFF";
             mail.Body = "INHALT";
             //mail.IsBodyHtml = true; // Falls Body HTML Quellcode ist  
 
-            SmtpClient client = new SmtpClient("smtp.live.com", 25);
-
             try
             {
-                client.Credentials = new System.Net.NetworkCredential(ABSENDER, PASSWORT);
+                client.Credentials = new System.Net.NetworkCredential(p_sender, p_password);
 
                 client.EnableSsl = true;
 
@@ -31,13 +27,14 @@ namespace EMail_versenden
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Successfully delivered package...");
             }
+
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Failed to deliver package...\n\n{0}", ex.Message);
             }
-            Console.ReadKey();
+
+            Console.ReadLine();
         }
     }
 }
-
